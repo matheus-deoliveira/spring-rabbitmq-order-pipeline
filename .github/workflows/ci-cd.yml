@@ -1,0 +1,38 @@
+name: Pipeline CI/CD - Order Service
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout do Código
+      uses: actions/checkout@v4
+
+    - name: ☕ Configurar JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: 🏗️ Compilar e Empacotar (Maven)
+      # Empacota o .jar ignorando os testes que dependem do banco no ar
+      run: ./mvnw clean package -DskipTests
+
+    - name: 🐳 Build da Imagem Docker
+      run: docker build -t matheus-order-pipeline:latest .
+
+    - name: 🛡️ Scan de Vulnerabilidades (Trivy)
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'matheus-order-pipeline:latest'
+        format: 'table'
+        exit-code: '0' # Mantém em 0 para não quebrar a esteira no portfólio, mas mostra a tabela!
+        ignore-unfixed: true
+        severity: 'CRITICAL,HIGH'
