@@ -67,7 +67,7 @@ done
 
 Esta seção documenta a evolução da arquitetura do projeto rumo a um padrão de excelência corporativa.
 
-* [ ] **Configurar uma DLQ (Dead Letter Queue):** Em sistemas de pagamento, se uma mensagem falhar, ela não pode ser perdida nem travar a fila principal. Configurar o RabbitMQ para rotear mensagens falhas (ex: erro temporário no banco) para uma fila de "mensagens mortas" para análise e reprocessamento posterior.
-* [ ] **Aumentar a Concorrência (Workers):** Otimizar a vazão da fila adicionando a propriedade `spring.rabbitmq.listener.simple.concurrency=5` no `application.properties`, permitindo o processamento paralelo de múltiplos pedidos simultaneamente.
-* [ ] **Idempotência no Consumo:** Adicionar uma trava de segurança no `OrderConsumer` para verificar se o pedido já consta com status `PROCESSED` no banco de dados antes de executar a regra de negócio. Isso previne cobranças duplicadas em caso de instabilidade na rede e reentrega de mensagens.
-* [ ] **CI/CD e Segurança (DevSecOps):** Desenvolver um workflow utilizando GitHub Actions para automatizar a execução de testes automatizados e integrar o Trivy para realizar varreduras (scans) de vulnerabilidades na imagem Docker antes do deploy.
+* [x] **Configurar uma DLQ (Dead Letter Queue):** Em sistemas de pagamento, se uma mensagem falhar, ela não pode ser perdida nem travar a fila principal. Configurar o RabbitMQ para rotear mensagens falhas (ex: erro temporário no banco) para uma fila de "mensagens mortas" para análise e reprocessamento posterior.
+* [x] **Aumentar a Concorrência (Workers):** Otimizar a vazão da fila adicionando a propriedade `spring.rabbitmq.listener.simple.concurrency=5` no `application.properties`, permitindo o processamento paralelo de múltiplos pedidos simultaneamente.
+* [x] **Idempotência no Consumo:** Adicionar uma trava de segurança no `OrderConsumer` para verificar se o pedido já consta com status `PROCESSED` no banco de dados antes de executar a regra de negócio. Isso previne cobranças duplicadas em caso de instabilidade na rede e reentrega de mensagens.
+* [x] **CI/CD e Segurança (DevSecOps):** Desenvolver um workflow utilizando GitHub Actions para automatizar a execução de testes automatizados e integrar o Trivy para realizar varreduras (scans) de vulnerabilidades na imagem Docker antes do deploy.
