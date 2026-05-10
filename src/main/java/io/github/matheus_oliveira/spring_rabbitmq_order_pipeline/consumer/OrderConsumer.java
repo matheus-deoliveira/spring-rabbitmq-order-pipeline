@@ -17,6 +17,12 @@ public class OrderConsumer {
     public void processOrder(Order orderMessage) throws InterruptedException {
         System.out.println("-> Mensagem recebida. Processando Pedido ID: " + orderMessage.getId());
         
+        // Simulação de falha: Se o produto tiver "erro" no nome, lançamos uma exceção
+        if (orderMessage.getProduct().toLowerCase().contains("erro")) {
+            System.err.println("-> Falha simulada ao processar pedido ID: " + orderMessage.getId() + ". Lançando exceção...");
+            throw new RuntimeException("Erro catastrófico no banco de dados ou API externa!");
+        }
+        
         // Simula um processamento demorado
         Thread.sleep(3000); 
 
