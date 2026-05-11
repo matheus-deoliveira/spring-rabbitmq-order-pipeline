@@ -17,6 +17,28 @@ Este projeto resolve esse gargalo através do **desacoplamento assíncrono**:
 2. O usuário recebe a resposta em milissegundos.
 3. O *Consumer* (Worker) escuta a fila e processa a regra de negócio no seu próprio ritmo, atuando como um "amortecedor" (Shock Absorber) contra picos de tráfego, garantindo que o banco de dados não seja sobrecarregado.
 
+## 🏗️ Arquitetura
+
+O projeto segue uma arquitetura orientada a eventos (EDA). O fluxo de vida de um pedido está representado abaixo:
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant A as API REST
+    participant DB as PostgreSQL
+    participant R as RabbitMQ
+    participant W as Worker (Consumer)
+
+    C->>A: POST /orders (Produto, Valor)
+    A->>DB: Salva pedido com status PENDING
+    A->>R: Publica evento "OrderCreatedEvent"
+    A-->>C: Retorna 200 OK (Rápido)
+    
+    R-->>W: Entrega evento de modo assíncrono
+    W->>W: Processa regras de negócio pesadas
+    W->>DB: Atualiza pedido para PROCESSED
+```
+
 ## 🚀 Como executar localmente
 
 ### 1. Subir a Infraestrutura (PostgreSQL e RabbitMQ)
